@@ -4,9 +4,10 @@ const random = require('./Random')
 module.exports = class Eater extends LivingCreature {
     constructor(x, y) {
       super(x,y,index)
+      this.disase = -1
       this.energy = 8
       this.gender = random(1)
-      this.mul = 0
+      this.timeout = 0
       this.directions = []
     }
     refreshCordinates() {
@@ -25,41 +26,46 @@ module.exports = class Eater extends LivingCreature {
 
       // Multiplying always
 
-      if (this.mul >= 10) {
+      // if (this.mul >= 10) {
+        // this.refreshCordinates()
+        // let randomSpace = random(this.directions)
+        // let x = randomSpace[0]
+        // let y = randomSpace[1]
+        // if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
+          // matrix[y][x] = 3
+          // let eater = new Eater(x, y)
+          // EaterArr.push(eater)
+        // }
+        // this.mul = 0
+
+        // Multiplying only with other gender
+        if (this.timeout >= 10) {
         this.refreshCordinates()
-        let randomSpace = random(this.directions)
-        let x = randomSpace[0]
-        let y = randomSpace[1]
-        if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-          matrix[y][x] = 3
-          let eater = new Eater(x, y)
-          EaterArr.push(eater)
-        }
-        this.mul = 0
-
-        // Multiplying only with other gender without timeout
-
-      //   this.refreshCordinates()
-      //   let squareWithOtherEater = chooseCell(3)
-      //   for(var i = 0; i < this.squareWithOtherEater.length; i++){
-      //     if (squareWithOtherEater[i].gender == 1 && this.gender == 0){
-      //       let freeSpace = this.chooseCell(0)
-      //       let randomSpace = random(freeSpace)
-      //       if(randomSpace){
-      //         let x = randomSpace[0]
-      //         let y = randomSpace[1]
-      //         if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {;
-      //           matrix[y][x] = 3;
-      //           let eater = new Eater(x, y);
-      //           EaterArr.push(eater);
-      //         };
-      //       };
-      //     this.mul = 0;
-      //     };
+        this.refreshCordinates()
+        let squareWithOtherEater = chooseCell(3)
+        if (squareWithOtherEater){
+          for(var i = 0; i < this.squareWithOtherEater.length; i++){
+            if (squareWithOtherEater[i].gender == 1 && this.gender == 0){
+              let freeSpace = this.chooseCell(0)
+              if (freeSpace){
+                let randomSpace = random(freeSpace)
+                if(randomSpace){
+                  let x = randomSpace[0]
+                  let y = randomSpace[1]
+                  if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {;
+                    matrix[y][x] = 3;
+                    let eater = new Eater(x, y);
+                    EaterArr.push(eater);
+                  };
+                };
+              };
+            };
+          };
         };
-        this.mul = this.mul + 1;
+        this.timeout = 0;
       };
-      
+    };
+
     eatgrass() {
       this.refreshCordinates()
       let foundedGrasses = random(this.chooseCell(1))
@@ -94,6 +100,7 @@ module.exports = class Eater extends LivingCreature {
     }
     move() {
       this.refreshCordinates()
+      this.timeout = this.timeout + 1;
       if (this.energy > 0) {
         let foundedGrassEater = random(this.chooseCell(2))
         let foundedGrasses = random(this.chooseCell(1))
@@ -125,6 +132,23 @@ module.exports = class Eater extends LivingCreature {
       else {
         this.die()
       }
+
+      // Check if we are touching water
+      if(this.disase == -1){
+        let AllWatersWeTouch = this.chooseCell(4);
+        if (AllWatersWeTouch.length != 0){
+          let ChanseOfDisase = random(10)
+          if (ChanseOfDisase <= 2){
+            this.disase = random(15)
+          };
+        };
+      }
+      // If we are disase we will die after few random moves
+      else if(this.disase > 0){
+        this.disase = this.disase - 1;
+      }else if(this.disase == 0){
+        this.die()
+      };
     }
     die() {
       // this.refreshCordinates()

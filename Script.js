@@ -62,7 +62,7 @@ socket = io();
     // }
 // }
 function setup() {
-    p5.disableFriendlyErrors = true;
+    // p5.disableFriendlyErrors = true;
     // let size = +prompt("Write Map Size(if 100 it means 100*100=10000 blocks)")
     // let grasscount = +prompt("Write Count of grass")
     // let grasseater = +prompt("Write Count of grassEater")
@@ -71,7 +71,7 @@ function setup() {
     // let fish = +prompt("Write Count of Fish")
     // matrixGenerator(size,grasscount,grasseater,eater,water,fish)
     frameRate(60);
-    createCanvas(matrix[0].length * side, matrix.length * side);
+    createCanvas(10 * side, 10 * side);
     background('#acacac');
 
 //     for (let i = 0; i < matrix.length; i++) {
@@ -138,5 +138,5 @@ function drawMatrix(data){
         }
     }
 }
-socket.on("matrix",drawMatrix);
 }
+socket.on("matrix",drawMatrix);

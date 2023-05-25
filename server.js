@@ -4,6 +4,7 @@ var server = require('http').createServer(app);
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
+let random = require("./Modules/Random")
 
 app.use(express.static("."));
 
@@ -140,8 +141,8 @@ function MovingCreatures(){
       matrix: matrix
    }
 
-   io.socket.emit("matrix",sendData)
+   io.socket.emit("matrix",sendData);
 }
 
 
-MovingCreatures()
+MovingCreatures();
